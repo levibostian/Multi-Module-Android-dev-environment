@@ -1,0 +1,37 @@
+# Workflow to build Android app and authenticate to GitHub Packages using GITHUB_TOKEN in local.properties
+name: Build Android App
+
+on:
+  push:
+    branches:
+      - '**'
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Create local.properties for GitHub Packages
+        run: |
+          echo 'githubpackages.user=github-actions[bot]' >> local.properties
+          echo 'githubpackages.key=${{ secrets.GITHUB_TOKEN }}' >> local.properties
+        working-directory: ./app
+
+      - name: Build with Gradle
+        run: ./gradlew assembleDebug
+        working-directory: ./app
