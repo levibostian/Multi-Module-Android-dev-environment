@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.androidapp.ui.theme.AndroidAppTheme
+import com.example.logger_module.Logger
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +28,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        Logger().log("does it work?")
     }
 }
 
