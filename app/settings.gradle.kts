@@ -39,3 +39,11 @@ dependencyResolutionManagement {
 
 rootProject.name = "Android app"
 include(":app")
+
+// Conditionally include local logger-module if workingLocally is true
+val workingLocally = (localProperties["workingLocally"] as String?)?.toBoolean() ?: false
+if (workingLocally) {
+    // Path to logger-module relative to this settings.gradle.kts
+    include(":logger-module")
+    project(":logger-module").projectDir = File("../../Multi-Module-Android-dev-environment-lib/logger-module")
+}

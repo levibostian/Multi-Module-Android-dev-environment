@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -39,6 +42,14 @@ android {
     }
 }
 
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("../local.properties")
+    if (localPropertiesFile.exists()) {
+        load(FileInputStream(localPropertiesFile))
+    }
+}
+val workingLocally = (localProperties.getProperty("workingLocally") as String?)?.toBoolean() == true
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -49,7 +60,11 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("com.example:logger-module:1.0.0")
+    if (workingLocally) {
+        implementation(project(":logger-module"))
+    } else {
+        implementation("com.example:logger-module:1.0.0")
+    }
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
